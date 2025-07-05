@@ -241,7 +241,7 @@ img {
 footer{
     padding: 2rem; 
     text-align: center; 
-    color: #ccc;
+    background: var(--md-dark-color);
 }
 
 @media (max-width: 450px) {
