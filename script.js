@@ -2,17 +2,31 @@ const movieSearchBox = document.getElementById("msbox");
 const searchList = document.getElementById("list");
 const resultGrid = document.getElementById("result");
 
+const API_KEY = "1d9789fe";
+const BASE_URL = "https://www.omdbapi.com/";
+
+// Load movies while typing
 async function loadMovies(term) {
-  const url = `https://omdbapi.com/?s=${term}&page=1&apikey=1d9789fe`;
-  const response = await fetch(url);
-  const data = await response.json();
-  if (data.Response === "True") {
-    displayMovieList(data.Search);
+  try {
+    const response = await fetch(
+      `${BASE_URL}?s=${encodeURIComponent(term)}&page=1&apikey=${API_KEY}`
+    );
+    const data = await response.json();
+
+    if (data.Response === "True") {
+      displayMovieList(data.Search);
+    } else {
+      searchList.innerHTML = "";
+    }
+  } catch (error) {
+    console.error("Error fetching movie list:", error);
   }
 }
 
+// Trigger search
 function findMovies() {
   const term = movieSearchBox.value.trim();
+
   if (term.length > 0) {
     searchList.classList.remove("hide-search-list");
     loadMovies(term);
@@ -21,40 +35,57 @@ function findMovies() {
   }
 }
 
+// Display search results
 function displayMovieList(movies) {
   searchList.innerHTML = "";
+
   movies.forEach((movie) => {
     const div = document.createElement("div");
-    div.dataset.id = movie.imdbID;
     div.classList.add("item");
-    const imgSrc = movie.Poster !== "N/A" ? movie.Poster : "./image/no-poster.jpg";
+    div.dataset.id = movie.imdbID;
+
+    const poster =
+      movie.Poster !== "N/A" ? movie.Poster : "./image/no-poster.jpg";
 
     div.innerHTML = `
       <div class="search-item-thumbnail">
-        <img src="${imgSrc}" />
+        <img src="${poster}" />
       </div>
       <div class="search-item-info">
         <h3>${movie.Title}</h3>
         <p>${movie.Year}</p>
       </div>
     `;
+
     searchList.appendChild(div);
   });
+
   attachMovieEvents();
 }
 
+// Attach click events to movie items
 function attachMovieEvents() {
   const items = searchList.querySelectorAll(".item");
+
   items.forEach((item) => {
     item.addEventListener("click", async () => {
       searchList.classList.add("hide-search-list");
       movieSearchBox.value = "";
-      const res = await fetch(`http://www.omdbapi.com/?i=${item.dataset.id}&apikey=1d9789fe`);
-      const details = await res.json();
-      displayMovieDetails(details);
+
+      try {
+        const response = await fetch(
+          `${BASE_URL}?i=${item.dataset.id}&apikey=${API_KEY}`
+        );
+        const data = await response.json();
+        displayMovieDetails(data);
+      } catch (error) {
+        console.error("Error fetching movie details:", error);
+      }
     });
   });
 }
+
+// Show movie details
 
 function displayMovieDetails(data) {
   const poster = data.Poster !== "N/A" ? data.Poster : "./image/no-poster.jpg";
@@ -78,7 +109,7 @@ function displayMovieDetails(data) {
     </div>
   `;
 }
-
+// Hide search list when clicking outside
 window.addEventListener("click", (e) => {
   if (e.target.className !== "form-control") {
     searchList.classList.add("hide-search-list");
