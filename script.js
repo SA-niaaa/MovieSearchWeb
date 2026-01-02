@@ -63,7 +63,6 @@ function displayMovieList(movies) {
   attachMovieEvents();
 }
 
-
 // Attach click events to movie items
 function attachMovieEvents() {
   const items = searchList.querySelectorAll(".item");
@@ -87,7 +86,6 @@ function attachMovieEvents() {
 }
 
 // Show movie details
-
 function displayMovieDetails(data) {
   const poster = data.Poster !== "N/A" ? data.Poster : "./image/no-poster.jpg";
   resultGrid.innerHTML = `
@@ -110,6 +108,7 @@ function displayMovieDetails(data) {
     </div>
   `;
 }
+
 // Hide search list when clicking outside
 window.addEventListener("click", (e) => {
   if (e.target.className !== "form-control") {

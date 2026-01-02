@@ -12,14 +12,17 @@
   box-sizing: border-box;
   transition: all 0.2s ease-in-out;
 }
+
 html, body {
   height: 100%;
 }
+
 .box {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
+
 main {
   flex-grow: 1;
 }
@@ -238,6 +241,7 @@ img {
   margin: 1rem 0.7rem 0 0;
   color: var(--red-color);
 }
+
 footer{
     padding: 2rem; 
     text-align: center; 
