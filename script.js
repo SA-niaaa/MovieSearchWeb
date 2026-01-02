@@ -63,6 +63,7 @@ function displayMovieList(movies) {
   attachMovieEvents();
 }
 
+
 // Attach click events to movie items
 function attachMovieEvents() {
   const items = searchList.querySelectorAll(".item");
